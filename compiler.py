@@ -55,9 +55,9 @@ os.makedirs("Build/nro",exist_ok=True)
 os.makedirs("Build/nsp",exist_ok=True)
 print("Script is now running")
 while True:
-    import subprocess
-    output = subprocess.check_output("git pull")
+    os.chdir("Goldleaf/Goldleaf")
+    output = subprocess.check_output("git pull",shell=True)
     output = output.decode('utf-8').strip()
-    if output == "Already up to date.":continue
+    if output == "Already up to date.":os.chdir("../..")
     else:GoldLeaf()
     time.sleep(60) 
