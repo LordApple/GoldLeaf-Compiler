@@ -1,7 +1,7 @@
 import os
 import shutil
 import time
-import zipfile
+import subprocess
 
 import discord
 import requests
@@ -50,12 +50,14 @@ def GoldLeaf():
         webhook("Goldleaf",failed=True)
         return
 
-#Build GoldLeaf at 21:00
-schedule.every().day.at("21:00").do(GoldLeaf)
 os.makedirs("Build",exist_ok=True)
 os.makedirs("Build/nro",exist_ok=True)
 os.makedirs("Build/nsp",exist_ok=True)
 print("Script is now running")
 while True:
-    schedule.run_pending()
+    import subprocess
+    output = subprocess.check_output("git pull")
+    output = output.decode('utf-8').strip()
+    if output == "Already up to date.":continue
+    else:GoldLeaf()
     time.sleep(60) 
