@@ -13,7 +13,7 @@ def date():
     return time.strftime("%d_%B_%Y")
 
 def webhook(project,failed):
-    webhook = Webhook.partial(Webhook ID, 'TOKEN', adapter=RequestsWebhookAdapter())
+    webhook = Webhook.partial(1111111111111, 'TOKEN', adapter=RequestsWebhookAdapter())
     if failed == True:
         embed=discord.Embed(title="Build Failed.",color=0xFF0000)
         embed.add_field(name=project,value="Nightly failed to build")
@@ -52,6 +52,9 @@ def GoldLeaf():
 
 #Build GoldLeaf at 21:00
 schedule.every().day.at("21:00").do(GoldLeaf)
+os.makedirs("Build",exist_ok=True)
+os.makedirs("Build/nro",exist_ok=True)
+os.makedirs("Build/nsp",exist_ok=True)
 print("Script is now running")
 while True:
     schedule.run_pending()
