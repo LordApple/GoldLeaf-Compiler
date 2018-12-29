@@ -36,7 +36,12 @@ def GoldLeaf():
     print("[SCRIPT] Git pull")
     os.system("git pull --all")
     print("[SCRIPT] Building")
-    os.system("./Generate-linux.sh")
+    os.system("rm -r ExeFs/main &> /dev/null")
+    os.system("make")
+    os.system("cp Output/Goldleaf.nso ExeFs/main")
+    os.system("rm Output/Goldleaf.nso Output/Goldleaf.nsp")
+    os.system("./BuildTools/hacbrewpack-linux -k BuildTools/keys.dat --exefsdir=ExeFs --romfsdir=RomFs --logodir=Logo --controldir=Control --nspdir=Output")
+    os.system("mv Output/050032a5cf12e000.nsp Output/Goldleaf.nsp")
     print("[SCRIPT] Making Goldleaf zip")
     try:
         shutil.move("Output/Goldleaf.nro","../../Build/nro/Goldleaf.nro")
@@ -48,6 +53,7 @@ def GoldLeaf():
     except FileNotFoundError:
         print("[SCRIPT] No files to move")
         webhook("Goldleaf",failed=True)
+        os.chdir("../..")
         return
 
 os.makedirs("Build",exist_ok=True)
@@ -58,6 +64,9 @@ while True:
     os.chdir("Goldleaf/Goldleaf")
     output = subprocess.check_output("git pull",shell=True)
     output = output.decode('utf-8').strip()
-    if output == "Already up to date.":os.chdir("../..")
-    else:GoldLeaf()
+    if output == "Already up to date.":
+        os.chdir("../..")
+    else:
+        os.chdir("../..")
+        GoldLeaf()
     time.sleep(60) 
