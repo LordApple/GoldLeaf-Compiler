@@ -15,20 +15,20 @@ webhook_token = "TOKEN"
 def date():
     return time.strftime("%d_%B_%Y")
 
-def webhook(project,failed):
+def SendWebhook(project,failed):
     webhook = Webhook.partial(webhook_id, webhook_token, adapter=RequestsWebhookAdapter())
     if failed == True:
         embed=discord.Embed(title="Build Failed.",color=0xFF0000)
-        embed.add_field(name=project,value="Nightly failed to build")
+        embed.add_field(name=project,value="Commit failed to build")
         embed.set_footer(text="Made by Apple#1337")
-        webhook.send(embed=embed, username='Nightly Builder')
+        webhook.send(embed=embed, username='GoldLeaf Builder')
     else:
         embed=discord.Embed(title="Building done",color=0x00FF00)
-        embed.add_field(name=project,value="Nightly successfully built")
+        embed.add_field(name=project,value="Commit successfully built")
         embed.set_footer(text="Made by Apple#1337")
-        webhook.send(embed=embed, username='Nightly Builder')
-        webhook.send(file=discord.File(f"../../Build/Goldleaf.nro_{date()}.zip"),username='Nightly Builder')
-        webhook.send(file=discord.File(f"../../Build/Goldleaf.nsp_{date()}.zip"),username='Nightly Builder')
+        webhook.send(embed=embed, username='GoldLeaf Builder')
+        webhook.send(file=discord.File(f"../../Build/Goldleaf.nro_{date()}.zip"), username='GoldLeaf Builder')
+        webhook.send(file=discord.File(f"../../Build/Goldleaf.nsp_{date()}.zip"), username='GoldLeaf Builder')
 
 
 def GoldLeaf():
@@ -36,8 +36,6 @@ def GoldLeaf():
     os.chdir("Goldleaf/Goldleaf")
     print("[SCRIPT] Making clean")
     os.system("make clean")
-    print("[SCRIPT] Git pull")
-    os.system("git pull --all")
     print("[SCRIPT] Building")
     os.system("rm -r ExeFs/main &> /dev/null")
     os.system("make")
@@ -51,11 +49,11 @@ def GoldLeaf():
         shutil.move("Output/Goldleaf.nsp","../../Build/nsp/Goldleaf.nsp")
         shutil.make_archive(f"../../Build/Goldleaf.nsp_{date()}","zip","../../Build/nsp")
         shutil.make_archive(f"../../Build/Goldleaf.nro_{date()}","zip","../../Build/nro")
-        webhook("Goldleaf",failed=False)
+        SendWebhook("Goldleaf",failed=False)
         os.chdir("../..")
     except FileNotFoundError:
         print("[SCRIPT] No files to move")
-        webhook("Goldleaf",failed=True)
+        SendWebhook("Goldleaf",failed=True)
         os.chdir("../..")
         return
 
@@ -77,11 +75,11 @@ while True:
                 js = r.json()
                 Commit_SHA = js["object"]["sha"]
                 embed=discord.Embed(title="Started Building",color=0x00FF00)
-                embed.add_field(name="GoldLeaf",value="Started compiling latest commit")
-                embed.add_field(name="Commit SHA:",value=Commit_SHA)
-                webhook.send(embed=embed, username='Nightly Builder')
+                embed.add_field(name="GoldLeaf",value="Started compiling latest commit",inline=False)
+                embed.add_field(name="Commit SHA:",value=Commit_SHA,inline=False)
+                webhook.send(embed=embed, username='GoldLeaf Builder')
             except:
-                webhook.send("Failed to get commit SHA (Still going to compile)",username='Nightly Builder')
+                webhook.send("Failed to get commit SHA (Still going to compile)", username='GoldLeaf Builder')
         os.chdir("../..")
         GoldLeaf()
-    time.sleep(60) 
+    time.sleep(120) 
