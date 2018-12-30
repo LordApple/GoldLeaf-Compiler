@@ -9,11 +9,14 @@ import schedule
 from discord import RequestsWebhookAdapter, Webhook
 
 
+webhook_id = 1111111111111
+webhook_token = "TOKEN"
+
 def date():
     return time.strftime("%d_%B_%Y")
 
 def webhook(project,failed):
-    webhook = Webhook.partial(1111111111111, 'TOKEN', adapter=RequestsWebhookAdapter())
+    webhook = Webhook.partial(webhook_id, webhook_token, adapter=RequestsWebhookAdapter())
     if failed == True:
         embed=discord.Embed(title="Build Failed.",color=0xFF0000)
         embed.add_field(name=project,value="Nightly failed to build")
@@ -67,6 +70,18 @@ while True:
     if output == "Already up to date.":
         os.chdir("../..")
     else:
+        webhook = Webhook.partial(webhook_id, webhook_token, adapter=RequestsWebhookAdapter())
+        r = requests.get("https://api.github.com/repos/XorTroll/Goldleaf/git/refs/heads/master")
+        if r.status_code == 200:
+            try:
+                js = r.json()
+                Commit_SHA = js["object"]["sha"]
+                embed=discord.Embed(title="Started Building",color=0x00FF00)
+                embed.add_field(name="GoldLeaf",value="Started compiling latest commit")
+                embed.add_field(name="Commit SHA:",value=Commit_SHA)
+                webhook.send(embed=embed, username='Nightly Builder')
+            except:
+                webhook.send("Failed to get commit SHA (Still going to compile)",username='Nightly Builder')
         os.chdir("../..")
         GoldLeaf()
     time.sleep(60) 
