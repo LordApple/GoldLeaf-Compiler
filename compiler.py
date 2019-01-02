@@ -82,4 +82,4 @@ while True:
                 webhook.send("Failed to get commit SHA (Still going to compile)", username='GoldLeaf Builder')
         os.chdir("../..")
         GoldLeaf()
-    time.sleep(120) 
+    time.sleep(60) 
