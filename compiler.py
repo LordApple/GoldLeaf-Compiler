@@ -9,8 +9,8 @@ import schedule
 from discord import RequestsWebhookAdapter, Webhook
 
 
-webhook_id = 1111111111111
-webhook_token = "TOKEN"
+webhook_id = 11111111111111111
+webhook_token = "11111111111111111111111"
 
 def date():
     return time.strftime("%d_%B_%Y")
@@ -65,21 +65,23 @@ while True:
     os.chdir("Goldleaf/Goldleaf")
     output = subprocess.check_output("git pull",shell=True)
     output = output.decode('utf-8').strip()
-    if output == "Already up to date.":
-        os.chdir("../..")
-    else:
-        webhook = Webhook.partial(webhook_id, webhook_token, adapter=RequestsWebhookAdapter())
-        r = requests.get("https://api.github.com/repos/XorTroll/Goldleaf/git/refs/heads/master")
-        if r.status_code == 200:
-            try:
-                js = r.json()
-                Commit_SHA = js["object"]["sha"]
-                embed=discord.Embed(title="Started Building",color=0x00FF00)
-                embed.add_field(name="GoldLeaf",value="Started compiling latest commit",inline=False)
-                embed.add_field(name="Commit SHA:",value=Commit_SHA,inline=False)
-                webhook.send(embed=embed, username='GoldLeaf Builder')
-            except:
-                webhook.send("Failed to get commit SHA (Still going to compile)", username='GoldLeaf Builder')
-        os.chdir("../..")
-        GoldLeaf()
+    try:
+        if output == "Already up to date.":
+            os.chdir("../..")
+        else:
+            webhook = Webhook.partial(webhook_id, webhook_token, adapter=RequestsWebhookAdapter())
+            r = requests.get("https://api.github.com/repos/XorTroll/Goldleaf/git/refs/heads/master")
+            if r.status_code == 200:
+                try:
+                    js = r.json()
+                    Commit_SHA = js["object"]["sha"]
+                    embed=discord.Embed(title="Started Building",color=0x00FF00)
+                    embed.add_field(name="GoldLeaf",value="Started compiling latest commit",inline=False)
+                    embed.add_field(name="Commit SHA:",value=Commit_SHA,inline=False)
+                    webhook.send(embed=embed, username='GoldLeaf Builder')
+                except:
+                    webhook.send("Failed to get commit SHA (Still going to compile)", username='GoldLeaf Builder')
+            os.chdir("../..")
+            GoldLeaf()
+    except: pass
     time.sleep(60) 
